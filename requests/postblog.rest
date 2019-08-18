@@ -1,0 +1,8 @@
+POST http://localhost:3003/api/blogs
+
+{
+    "title": "John Smith's life",
+    "author": "John Smith",
+    "url":"www.google.com",
+    "likes": 3
+}
