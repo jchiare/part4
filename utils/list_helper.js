@@ -18,13 +18,13 @@ const mostBlogs = allBlogs => {
 
 const mostLikes = allBlogs => {
   const bloggers = {}
-  for (let blog in allBlogs){
-    if(!bloggers[allBlogs[blog]['author']]){
-      bloggers[allBlogs[blog]['author']] = allBlogs[blog]['likes']
-    } else {
-      bloggers[allBlogs[blog]['author']] = bloggers[allBlogs[blog]['author']] + allBlogs[blog]['likes']
+  allBlogs.forEach(blog => {
+    if(bloggers[blog.author]){
+      bloggers[blog.author] += blog.likes
+    } else{
+      bloggers[blog.author] = blog.likes
     }
-  }
+  })
   return _.maxBy(_.map(bloggers, (val,key) => ({ author:key,likes:val })),'likes')
 }
 
