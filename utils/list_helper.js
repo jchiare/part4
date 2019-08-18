@@ -12,13 +12,26 @@ const favoriteBlog = blogs => {
   return _.maxBy(blogs,'likes')
 }
 
-const mostBlogs = blogs => {
-  return _.maxBy(_.countBy(blogs,'author'))
+const mostBlogs = allBlogs => {
+  return _.maxBy(_.map(_.countBy(allBlogs,'author'), (val, key) => ({ author:key,blogs:val })),'blogs')
+}
+
+const mostLikes = allBlogs => {
+  const bloggers = {}
+  for (let blog in allBlogs){
+    if(!bloggers[allBlogs[blog]['author']]){
+      bloggers[allBlogs[blog]['author']] = allBlogs[blog]['likes']
+    } else {
+      bloggers[allBlogs[blog]['author']] = bloggers[allBlogs[blog]['author']] + allBlogs[blog]['likes']
+    }
+  }
+  return _.maxBy(_.map(bloggers, (val,key) => ({ author:key,likes:val })),'likes')
 }
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }

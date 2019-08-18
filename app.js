@@ -3,7 +3,10 @@ const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const { requestLogger, unknownEndpoint, errorHandler } = require('./utils/middleware')
+
 const blogRouter = require('./controller/blog')
+const usersRouter = require('./controller/users')
+
 const mongoose = require('mongoose')
 const { MONGODB_URI } = require('./utils/config')
 const logger = require('./utils/logger')
@@ -17,6 +20,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
   .catch((error) => {
     logger.error('error connection to MongoDB:', error.message)
   })
+mongoose.set('useFindAndModify', false)
 
 app.use(cors())
 app.use(express.static('build'))
@@ -25,6 +29,7 @@ app.use(bodyParser.json())
 app.use(requestLogger)
 
 app.use('/api/blogs', blogRouter)
+app.use('/api/users', usersRouter)
 
 app.use(unknownEndpoint)
 app.use(errorHandler)
