@@ -20,7 +20,9 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
   .catch((error) => {
     logger.error('error connection to MongoDB:', error.message)
   })
+
 mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 app.use(cors())
 app.use(express.static('build'))

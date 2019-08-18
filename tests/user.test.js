@@ -1,7 +1,13 @@
+const User = require('.././models/users')
+const app = require('../app')
+const supertest = require('supertest')
+const api = supertest(app)
+const helper = require('.././utils/test_helper')
+
 describe('when there is initially one user at db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
-    const user = new User({ username: 'root', password: 'sekret' })
+    const user = new User({ username: 'root', password: 'root' })
     await user.save()
   })
 
@@ -9,9 +15,9 @@ describe('when there is initially one user at db', () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
+      username: 'jayc',
+      name: 'Jay c',
+      password: '12345678',
     }
 
     await api
@@ -25,5 +31,36 @@ describe('when there is initially one user at db', () => {
 
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
+  })
+
+  test('returns users', async() => {
+
+    const res = await api
+      .get('/api/users')
+      .expect(200)
+
+    expect(res.body.length).toBe(1)
+
+  })
+
+  test('creation fails with non-unique username', async () => {
+
+    const newUser = {
+      username: 'root',
+      name: 'Jay c',
+      password: 'root',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    expect(response.body).toEqual({
+      error: 'User validation failed: username: Error, ' +
+        'expected `username` to be unique. Value: ' +
+        '`root`'
+    })
+
   })
 })
