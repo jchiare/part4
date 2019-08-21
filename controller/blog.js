@@ -68,13 +68,15 @@ blogRouter.delete('/:id', async(req,res,next) => {
     const blog = await Blog.findById(params.id)
 
     if (blog.user.toString() === user.id.toString()){
-      console.log('working')
       await Blog.findByIdAndDelete(req.params.id)
       res.status(204).end()
     }
-    throw {
-      name: 'PermissionError'
+    else {
+      throw {
+        name: 'PermissionError'
+      }
     }
+
 
   } catch (exception){
     next(exception)

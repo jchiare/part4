@@ -25,13 +25,13 @@ const unknownEndpoint = (request, response) => {
 const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
-    return response.status(400).send({ error: 'malformatted id' })
+    return response.status(400).json({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   } else if (error.name === 'JsonWebTokenError') {
     return response.status(401).json({ error: 'invalid token' })
   } else if (error.name === 'PermissionError'){
-    return response.status(403).send({ error: 'User doesn\'t have correct permission' })
+    return response.status(403).json({ error: 'User doesn\'t have correct permission' })
   }
 
   logger.error(error.message)
