@@ -9,7 +9,7 @@ const blogRouter = require('./controller/blog')
 const usersRouter = require('./controller/users')
 const loginRouter = require('./controller/login')
 
-const { requestLogger, unknownEndpoint, errorHandler } = require('./utils/middleware')
+const { requestLogger, unknownEndpoint, errorHandler, tokenExtractor } = require('./utils/middleware')
 const { MONGODB_URI } = require('./utils/config')
 const logger = require('./utils/logger')
 
@@ -30,6 +30,7 @@ app.use(cors())
 app.use(express.static('build'))
 app.use(bodyParser.json())
 
+app.use(tokenExtractor)
 app.use(requestLogger)
 
 app.use('/api/login', loginRouter)

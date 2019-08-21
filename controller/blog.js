@@ -3,16 +3,6 @@ const { Blog } = require('.././models/blog')
 const User = require('.././models/users')
 const jwt = require('jsonwebtoken')
 
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    console.log(authorization.substring(7))
-
-    return authorization.substring(7)
-  }
-  return null
-}
-
 blogRouter.get('/', async(req, res, next) => {
 
   try {
@@ -27,10 +17,7 @@ blogRouter.get('/', async(req, res, next) => {
 
 blogRouter.post('/', async(req, res, next) => {
 
-  const { body } = req
-  const token = getTokenFrom(req)
-
-
+  const { body, token } = req
 
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET)
@@ -70,9 +57,24 @@ blogRouter.put('/:id', async(req,res,next) => {
 
 blogRouter.delete('/:id', async(req,res,next) => {
 
+  const { token, params } = req
+
   try {
-    await Blog.findByIdAndDelete(req.params.id)
-    res.status(204).end()
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!token || !decodedToken.id) {
+      return res.status(401).json({ error: 'token missing or invalid' })
+    }
+    const user = await User.findById(decodedToken.id)
+    const blog = await Blog.findById(params.id)
+
+    if (blog.user.toString() === user.id.toString()){
+      console.log('working')
+      await Blog.findByIdAndDelete(req.params.id)
+      res.status(204).end()
+    }
+    throw {
+      name: 'PermissionError'
+    }
 
   } catch (exception){
     next(exception)
