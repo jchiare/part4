@@ -64,32 +64,3 @@ describe('when there is initially one user at db', () => {
 
   })
 })
-
-/*
-title
-:
-"Canonical string reduction"
-author
-:
-"Edsger W. Dijkstra"
-url
-:
-"http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
-likes
-:
-12
-
-
-
-title
-:
-"Lord of the rings"
-author
-:
-"J K Tolken"
-url
-:
-"http://lotr.com"
-likes
-:
-1*/

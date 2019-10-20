@@ -1,0 +1,12 @@
+POST http://localhost:3003/api/blogs/5d5cd2d9f31dcec36c9fc30c/comments
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyMiIsImlkIjoiNWQ1Y2YwYjI2NmNkOTMwMTNlOWFhMzNhIiwiaWF0IjoxNTY2MzcyMDY0fQ.Kpk9ZjwKRQL4-FYYSyKx0IH96JKToeNJ7XeVv6ya1uc
+
+{
+    "title": "Test user's 2 blog",
+    "author": "Lil Wayne",
+    "url":"www.youtube.com",
+    "likes": 4,
+    "userId": "5d5cf0b266cd93013e9aa33a",
+    "comments":["ted"]
+}

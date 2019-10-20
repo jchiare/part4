@@ -4,7 +4,6 @@ const User = require('.././models/users')
 const jwt = require('jsonwebtoken')
 
 blogRouter.get('/', async(req, res, next) => {
-
   try {
     const blogs = await Blog.find({})
       .populate('user',{ username: 1, name: 1 })
@@ -16,9 +15,7 @@ blogRouter.get('/', async(req, res, next) => {
 })
 
 blogRouter.post('/', async(req, res, next) => {
-
   const { body, token } = req
-
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET)
     if (!token || !decodedToken.id) {
@@ -35,11 +32,21 @@ blogRouter.post('/', async(req, res, next) => {
     if(!blog['likes']){
       blog['likes'] = 0
     }
+    blog['comments'] = []
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
     res.status(201).json(savedBlog.toJSON())
 
+  } catch (exception){
+    next(exception)
+  }
+})
+
+blogRouter.get('/:id', async(req,res,next) => {
+  try {
+    //const response = await Blog.findByIdAndUpdate(req.params.id,{ ...req.body }, { new:true })
+    res.status(201).send('hi')
   } catch (exception){
     next(exception)
   }
@@ -55,8 +62,16 @@ blogRouter.put('/:id', async(req,res,next) => {
   }
 })
 
-blogRouter.delete('/:id', async(req,res,next) => {
+blogRouter.post('/:id/comments', async(req,res,next) => {
+  try {
+    const response = await Blog.findByIdAndUpdate(req.params.id,{ $push: { comments:req.body.comment } }, { new:true })
+    res.status(201).json(response.toJSON())
+  } catch (exception){
+    next(exception)
+  }
+})
 
+blogRouter.delete('/:id', async(req,res,next) => {
   const { token, params } = req
 
   try {
